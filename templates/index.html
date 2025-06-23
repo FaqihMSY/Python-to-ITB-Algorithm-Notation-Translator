@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penerjemah Python ke Notasi Algoritma ITB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Penerjemah Python ke Notasi Algoritma ITB</h1>
+    </header>
+    <div class="translator-container">
+        <div class="panel input-panel">
+            <div class="panel-header">
+                <span>Python</span>
+                <div class="panel-actions">
+                    <input type="file" id="file-upload" accept=".py" style="display: none;"/>
+                    <button id="upload-button" title="Upload .py file"><i class="fas fa-file-upload"></i> Upload File</button>
+                </div>
+            </div>
+            <textarea id="python-code" placeholder="Paste your Python code here..."></textarea>
+        </div>
+
+        <div class="panel output-panel">
+            <div class="panel-header">
+                <span>Algorithmic Notation</span>
+                 <div class="panel-actions">
+                    <button id="copy-button" title="Copy to clipboard"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+            <pre id="translation-output"><code class="language-plain">Translation will appear here...</code></pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pythonCodeTextarea = document.getElementById('python-code');
+            const translationOutput = document.querySelector('#translation-output code');
+            const uploadButton = document.getElementById('upload-button');
+            const fileUploadInput = document.getElementById('file-upload');
+            const copyButton = document.getElementById('copy-button');
+            async function translateCode(code) {
+                if (code.trim() === '') {
+                    translationOutput.textContent = 'Translation will appear here...';
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/translate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ code: code }),
+                    });
+                    const data = await response.json();
+                    translationOutput.textContent = data.translation;
+                } catch (error) {
+                    translationOutput.textContent = 'Error connecting to the server.';
+                    console.error('Error:', error);
+                }
+            }
+            let debounceTimer;
+            pythonCodeTextarea.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    translateCode(pythonCodeTextarea.value);
+                }, 500);
+            });
+            
+            uploadButton.addEventListener('click', () => {
+                fileUploadInput.click();
+            });
+            fileUploadInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        pythonCodeTextarea.value = e.target.result;
+                        translateCode(e.target.result);
+                    };
+                    reader.readAsText(file);
+                }
+            });
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(translationOutput.textContent).then(() => {
+                    copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

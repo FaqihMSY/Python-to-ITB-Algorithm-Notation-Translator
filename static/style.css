@@ -1,0 +1,132 @@
+/* static/style.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&family=Source+Sans+Pro:wght@400;600&display=swap');
+
+:root {
+    --bg-color: #121212;
+    --panel-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --primary-purple: #8A2BE2; 
+    --light-purple: #9370DB; 
+    --border-color: #333;
+    --font-sans: 'Source Sans Pro', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-weight: 600;
+    color: var(--primary-purple);
+}
+
+.translator-container {
+    display: flex;
+    gap: 20px;
+    height: 75vh;
+}
+
+.panel {
+    flex: 1;
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 10px 15px;
+    background-color: #252526;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--light-purple);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-actions button {
+    background-color: var(--primary-purple);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.panel-actions button:hover {
+    background-color: var(--light-purple);
+}
+
+.panel-actions button i {
+    margin-right: 5px;
+}
+
+textarea, pre {
+    flex-grow: 1;
+    padding: 15px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.6;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    resize: none;
+    outline: none;
+    overflow-y: auto; 
+}
+
+textarea::placeholder {
+    color: #666;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#translation-output code {
+    color: #a5d6ff;
+}
+/
+textarea::-webkit-scrollbar,
+pre::-webkit-scrollbar {
+    width: 8px;
+}
+
+textarea::-webkit-scrollbar-track,
+pre::-webkit-scrollbar-track {
+    background: var(--panel-bg);
+}
+
+textarea::-webkit-scrollbar-thumb,
+pre::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover,
+pre::-webkit-scrollbar-thumb:hover {
+    background-color: var(--light-purple);
+}
